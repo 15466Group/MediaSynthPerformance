@@ -67,7 +67,6 @@ public class Performance : NetworkManager {
 		//network stuff
 		connected = false;
 		button = GameObject.Find("ToggleButton");
-		userName = "Team 1";
 		nameStyle = new GUIStyle ();
 		nameStyle.fontStyle = FontStyle.Bold;
 		nameStyle.normal.textColor = Color.white;
