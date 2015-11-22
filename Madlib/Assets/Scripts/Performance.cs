@@ -53,9 +53,9 @@ public class Performance : NetworkManager {
 
 	// Use this for initialization
 	void Start () {
-		roundWaitTime = 3f;
+		roundWaitTime = 10f;
 		amountWaited = 0f;
-		initCountdown = 7.0f; //each round lasts 7 rounds
+		initCountdown = 14f; //each round lasts 7 rounds
 		countDown = initCountdown;
 		round = 0;
 		story = new StreamReader (inputStoryPath);
@@ -67,7 +67,7 @@ public class Performance : NetworkManager {
 		//network stuff
 		connected = false;
 		button = GameObject.Find("ToggleButton");
-		userName = "default";
+		userName = "Team 1";
 		nameStyle = new GUIStyle ();
 		nameStyle.fontStyle = FontStyle.Bold;
 		nameStyle.normal.textColor = Color.white;
@@ -278,33 +278,34 @@ public class Performance : NetworkManager {
 	}
 
 	void doTimerStuff(){
-		//check timer, if countDown is <= 0, send message with words[round]
-		if (!lockedForRound)
-			countDown -= Time.deltaTime;
-		else 
-			countDown = initCountdown;
-		Debug.Log ("nextRound in: " + countDown);
-		if (countDown <= 0f) {
-			//no one supplied a word quick enough so host sends msg!
-			if (isHost){
+		if (users.Count == 2) {
+			//check timer, if countDown is <= 0, send message with words[round]
+			if (!lockedForRound)
+				countDown -= Time.deltaTime;
+			else 
 				countDown = initCountdown;
-				Debug.Log ("TIMES UP");
-				currentMessage = words[round];
-				sendMessage();
+			Debug.Log ("nextRound in: " + countDown);
+			if (countDown <= 0f) {
+				//no one supplied a word quick enough so host sends msg!
+				if (isHost) {
+					countDown = initCountdown;
+					Debug.Log ("TIMES UP");
+					currentMessage = words [round];
+					sendMessage ();
+				}
 			}
-		}
 
-		if (lockedForRound) { //new round stuff is happening?
-			Debug.Log ("amountWaited: " + amountWaited);
-			amountWaited += Time.deltaTime;
-			if (amountWaited > roundWaitTime) {
-				lockedForRound = false;
-				amountWaited = 0f;
+			if (lockedForRound) { //new round stuff is happening?
+				Debug.Log ("amountWaited: " + amountWaited);
+				amountWaited += Time.deltaTime;
+				if (amountWaited > roundWaitTime) {
+					lockedForRound = false;
+					amountWaited = 0f;
+				}
+			} else {
+				Debug.Log ("***** descriptor *****" + descriptors [round]);
 			}
-		} else {
-			Debug.Log ("***** descriptor *****" + descriptors[round]);
 		}
-		
 	}
 	
 	void displayStuff(){
