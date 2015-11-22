@@ -276,13 +276,19 @@ public class Performance : NetworkManager {
 		}
 	}
 
+	void Update(){
+		doTimerStuff();
+	}
+
 	void doTimerStuff(){
 		if (users.Count == 2) {
 			//check timer, if countDown is <= 0, send message with words[round]
 			if (!lockedForRound)
 				countDown -= Time.deltaTime;
-			else 
+			else {
 				countDown = initCountdown;
+				currentMessage = "";
+			}
 			Debug.Log ("nextRound in: " + countDown);
 			if (countDown <= 0f) {
 				//no one supplied a word quick enough so host sends msg!
@@ -309,8 +315,6 @@ public class Performance : NetworkManager {
 	
 	void displayStuff(){
 		if (round < numRounds) {
-//			Debug.Log ("round: " + round);
-			doTimerStuff();
 			//chat display
 			GUILayout.BeginVertical (GUILayout.Width (400));
 			{
